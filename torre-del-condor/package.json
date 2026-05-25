@@ -1,0 +1,18 @@
+{
+  "name": "torre-del-condor",
+  "version": "1.0.0",
+  "description": "Juego 2D de aventura andina con Phaser y Vite",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "start": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "vite": "5.4.21"
+  }
+}
