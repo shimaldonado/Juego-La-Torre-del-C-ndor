@@ -1,0 +1,84 @@
+import { COLORS } from '../config/constants.js';
+import { AudioManager } from '../managers/AudioManager.js';
+
+// Helpers internos sin depender de Phaser.Math globalmente
+function rndInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function rndFloat(min, max) { return Math.random() * (max - min) + min; }
+
+export function makeButton(scene, x, y, label, onClick, width = 300, height = 56) {
+  const box = scene.add.rectangle(x, y, width, height, 0x23124d, 0.92)
+    .setStrokeStyle(3, COLORS.gold)
+    .setInteractive({ useHandCursor: true });
+
+  const text = scene.add.text(x, y, label, {
+    fontSize: '22px',
+    fontFamily: 'Arial, sans-serif',
+    color: '#fff3bf',
+    fontStyle: 'bold',
+  })
+    .setOrigin(0.5)
+    .setInteractive({ useHandCursor: true });
+
+  const targets = [box, text];
+  let clicked = false;
+
+  const hoverOn = () => {
+    box.setFillStyle(0x4c1d95, 1);
+    text.setColor('#ffffff');
+    scene.tweens.add({ targets, scaleX: 1.03, scaleY: 1.03, duration: 110 });
+  };
+
+  const hoverOff = () => {
+    box.setFillStyle(0x23124d, 0.92);
+    text.setColor('#fff3bf');
+    scene.tweens.add({ targets, scaleX: 1, scaleY: 1, duration: 110 });
+  };
+
+  const press = () => {
+    // Evita doble ejecución cuando un dispositivo táctil dispara varios eventos seguidos.
+    if (clicked) return;
+    clicked = true;
+    scene.time.delayedCall(180, () => { clicked = false; });
+
+    AudioManager.resume(scene);
+    AudioManager.play(scene, 'sfx_checkpoint', { volume: 0.22 });
+    onClick?.();
+  };
+
+  targets.forEach((target) => {
+    target.on('pointerover', hoverOn);
+    target.on('pointerout', hoverOff);
+    target.on('pointerdown', press);
+  });
+
+  return {
+    box,
+    text,
+    setVisible: (v) => { box.setVisible(v); text.setVisible(v); },
+  };
+}
+
+export function addScreenBackground(scene, bgKey = 'fondo_nivel1') {
+  const { width, height } = scene.scale;
+  scene.add.image(0, 0, bgKey).setOrigin(0).setDisplaySize(width, height);
+  scene.add.rectangle(width / 2, height / 2, width, height, 0x120718, 0.38);
+  const stars = scene.add.graphics();
+  stars.fillStyle(0xfff3bf, 0.55);
+  for (let i = 0; i < 80; i++) {
+    stars.fillCircle(rndInt(0, width), rndInt(20, 500), rndFloat(1, 2.5));
+  }
+  return stars;
+}
+
+export function addTitle(scene, text, y = 80) {
+  const title = scene.add.text(scene.scale.width / 2, y, text, {
+    fontSize: '58px',
+    fontFamily: 'Georgia, serif',
+    color: '#ffcc5c',
+    stroke: '#120718',
+    strokeThickness: 9,
+    shadow: { offsetX: 0, offsetY: 5, color: '#000000', blur: 8, fill: true },
+  }).setOrigin(0.5);
+  scene.tweens.add({ targets: title, y: y + 8, duration: 1600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  return title;
+}
