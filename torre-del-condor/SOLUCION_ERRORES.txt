@@ -1,0 +1,26 @@
+LA TORRE DEL CÓNDOR - CORRECCIÓN DE ERRORES
+
+Cambios aplicados:
+1. Se corrigió el bloqueo de GameScene al entrar desde Seleccionar personaje o Seleccionar nivel.
+   Error corregido: setAllowGravity is not a function.
+2. Se fijó Phaser a la versión estable 3.90.0 para evitar incompatibilidades de Phaser 4.
+3. Se corrigió el Service Worker para que no intente guardar peticiones chrome-extension:// en cache.
+4. En localhost el Service Worker se desregistra automáticamente para evitar que Chrome cargue archivos viejos.
+5. Se desactivó HMR en Vite para evitar el error visual de WebSocket en consola.
+6. Se verificó que npm install y npm run build funcionen correctamente.
+
+Para ejecutar:
+1. Descomprime el ZIP.
+2. Entra a la carpeta torre-del-condor.
+3. Ejecuta:
+   npm install
+   npm run dev
+4. Abre:
+   http://localhost:5173
+
+IMPORTANTE si antes se quedó pegado o sigue mostrando errores viejos:
+- Abre Chrome DevTools con F12.
+- Ve a Application > Storage.
+- Presiona Clear site data.
+- También puedes entrar a Application > Service Workers y presionar Unregister.
+- Recarga con Ctrl + F5.
